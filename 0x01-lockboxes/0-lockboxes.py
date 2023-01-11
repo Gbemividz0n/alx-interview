@@ -1,35 +1,20 @@
 #!/usr/bin/python3
-'''defines canUnlockAll function'''
+"""A method that determines if all the boxes can be opened."""
 
 
 def canUnlockAll(boxes):
-    '''
-    Args:
-        boxes: list
-    returns:
-        True or False
-    '''
-    # Check if the input is valid
-    if not boxes:
-        return False
-    # Set to keep track of which boxes have been opened
-    opened = set()
-    # Queue for the keys
-    keys = []
-    # Add the keys in the first box to the queue
-    # and mark the first box as opened
-    keys.extend(boxes[0])
-    opened.add(0)
-    # BFS loop
-    while keys:
-        # Get the next key
-        key = keys.pop(0)
-        # Check if the key is a valid box index
-        # and if the box has not been opened
-        if 0 <= key < len(boxes) and key not in opened:
-            # Add the keys in the box to the queue
-            keys.extend(boxes[key])
-            # Mark the box as opened
-            opened.add(key)
-    # Return True if all boxes have been opened, else return False
-    return len(opened) == len(boxes)
+    """Return True if all boxes can be opened, else return False."""
+    n = len(boxes)
+    opened_boxes = set([0])
+    unoppened_boxes = set(boxes[0]).difference(set([0]))
+
+    while len(unoppened_boxes) > 0:
+        box_key = unoppened_boxes.pop()
+
+        if not box_key or box_key >= n or box_key < 0:
+            continue
+        if box_key not in opened_boxes:
+            unoppened_boxes = unoppened_boxes.union(boxes[box_key])
+            opened_boxes.add(box_key)
+
+    return n == len(opened_boxes)
