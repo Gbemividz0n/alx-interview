@@ -1,15 +1,14 @@
 #!/usr/bin/python3
 
-def minOperations(n):
-    if n <= 0:
+def minOperations(n: int) -> int:
+    if n == 0:
         return 0
-    operations = 0
-    i = 2
-    while i <= n:
-        operations += 1
-        if n % i == 0:
-            n = n // i
-            i = 2
-        else:
-            i += 1
-    return operations + 1
+
+    dp = [float("inf")] * (n+1)
+    dp[1] = 0
+    
+    for i in range(2, n+1):
+        for j in range(1, i):
+            if i % j == 0:
+                dp[i] = min(dp[i], dp[j] + 1)
+    return dp[n]
