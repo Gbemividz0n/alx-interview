@@ -1,14 +1,27 @@
 #!/usr/bin/python3
+""" Defines minOperations."""
 
-def minOperations(n: int) -> int:
-    if n == 0:
+
+def minOperations(n):
+    """ Returns an integer.
+        if n is imposible to achieve, return 0.
+    """
+    if not isinstance(n, int):
         return 0
+    numOperations = 0
+    clipboard = 1
+    done = 1
+    while done < n:
+        if clipboard == 0:
+            clipboard = done
+            done += clipboard
+            numOperations += 2
+        elif n - done > 0 and (n - done) % done == 0:
+            clipboard = done
+            done += clipboard
+            numOperations += 2
+        elif clipboard > 0:
+            done += clipboard
+            numOperations += 1
 
-    dp = [float("inf")] * (n+1)
-    dp[1] = 0
-    
-    for i in range(2, n+1):
-        for j in range(1, i):
-            if i % j == 0:
-                dp[i] = min(dp[i], dp[j] + 1)
-    return dp[n]
+    return numOperations
