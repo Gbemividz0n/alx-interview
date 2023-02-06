@@ -1,51 +1,15 @@
+#!/usr/bin/python3
+import random
 import sys
+from time import sleep
+import datetime
 
-def process_line(line, metrics):
-    parts = line.split()
-    if len(parts) != 9:
-        return
-
-    try:
-        status_code = int(parts[8])
-        file_size = int(parts[-1])
-    except ValueError:
-        return
-
-    if status_code not in metrics['status_codes']:
-        return
-
-    metrics['total_size'] += file_size
-    metrics['status_codes'][status_code] += 1
-
-def print_metrics(metrics):
-    print("File size: {}".format(metrics['total_size']))
-    for status_code in sorted(metrics['status_codes'].keys()):
-        print("{}: {}".format(status_code, metrics['status_codes'][status_code]))
-
-def main():
-    metrics = {
-        'total_size': 0,
-        'status_codes': {
-            200: 0,
-            301: 0,
-            400: 0,
-            401: 0,
-            403: 0,
-            404: 0,
-            405: 0,
-            500: 0
-        }
-    }
-    line_count = 0
-
-    try:
-        for line in sys.stdin:
-            process_line(line, metrics)
-            line_count += 1
-            if line_count % 10 == 0:
-                print_metrics(metrics)
-    except KeyboardInterrupt:
-        print_metrics(metrics)
-
-if __name__ == '__main__':
-    main()
+for i in range(10000):
+    sleep(random.random())
+    sys.stdout.write("{:d}.{:d}.{:d}.{:d} - [{}] \"GET /projects/260 HTTP/1.1\" {} {}\n".format(
+        random.randint(1, 255), random.randint(1, 255), random.randint(1, 255), random.randint(1, 255),
+        datetime.datetime.now(),
+        random.choice([200, 301, 400, 401, 403, 404, 405, 500]),
+        random.randint(1, 1024)
+    ))
+    sys.stdout.flush()
